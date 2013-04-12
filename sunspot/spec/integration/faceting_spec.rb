@@ -84,7 +84,7 @@ describe 'search faceting' do
       end
       search.facet(:title).rows.map { |row| row.value }.should include('zero')
     end
-    
+
     it 'should return facet rows from an offset' do
       search = Sunspot.search(Post) do
         facet :title, :offset => 3
@@ -152,6 +152,18 @@ describe 'search faceting' do
       end
 
       # Should be 5 instead of 11
+      search.facet(:title).rows.first.count.should == 5
+    end
+
+    it 'gives correct facet count when group == true and group.facet == true' do
+      search = Sunspot.search(Post) do
+        group :title do
+          facet
+        end
+
+        facet :title, :extra => :any
+      end
+
       search.facet(:title).rows.first.count.should == 5
     end
   end
